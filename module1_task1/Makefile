@@ -1,9 +1,13 @@
-.PHONY: build clean post
+.PHONY: 
+
+	build clean post
 
 build:
-	hugo
+
+	hugo --destination ./dist
 
 clean:
+
 	rm -rf dist/
 
 post:
