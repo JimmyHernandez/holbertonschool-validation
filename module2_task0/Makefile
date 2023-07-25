@@ -1,43 +1,26 @@
-# Hugo Makefile commands
-build: ## Builds site
-	@hugo
-	@go build -o awesome-api ./*.go
+build: ## Compile the source code of the application to a binary name file using tje command go build
+	hugo
+	go build 
 
-run: ## Runs program
-	@./awesome-api >./awesome.log 2>&1 &
+post: ## Creates a new post using env vars POST_TITLE and POST_NAME
+	hugo new posts/$(POST_NAME).md
+	sed -i 's/title: .*/title: "$(POST_TITLE)"/' content/posts/$(POST_NAME).md
 
-stop: ## Stops Program
-	@pkill awesome-api
-
-clean: ## Cleans file
-	@rm -Rf dist/*
-	@rm -f awesome-api awesome.log || true
-	@pkill awesome-api
-
-test: ## Tests website
-	@echo "# Test 1:"
-	@if curl http://localhost:9999; then \
-		echo "TESTOK" ;\
-	else \
-		echo "TESTFAILED" ;\
-	fi
-	@echo "# Test 2:"
-	@if curl http://localhost:9999/health; then \
-		echo ""; \
-		echo "TESTOK" ;\
-	else \
-		echo ""; \
-		echo "TESTFAILED"; \
-	fi
-
-post: ## Posts content
-	@rm -Rf content/posts/$(POST_NAME).md
-	@hugo new posts/$(POST_NAME).md
-	@sed -i 's/title:.*/title: $(POST_TITLE)/' content/posts/$(POST_NAME).md
-	@sed -i 's/draft:.*/draft: "false"/' content/posts/$(POST_NAME).md
+clean: ##  Delete the binary awesome-api and the log file awesome-api.log
+	pkill awesome-api
+	rm -rf ./dist/*
+	rm  -f ./awesome-api ./awesome.log
 
 .SILENT:
-help: ## Displays commands
-	@echo "Usage: make <command>"
-	@echo "-----"	
-	@cat Makefile | grep "^\w*:.*##.*" | sed 's/## //'
+help: ## Displays helpful information for Makefile commands
+	cat Makefile | grep '##' | tr -d '##'
+ 
+run: ## Run the application in background by executing the binary awesome-api, and write logs
+	./awesome-api >./awesome.log 2>&1 &
+
+stop: ## Stop the application with the command kill
+	pkill awesome-api
+
+test: ## You want to test it to ensure that it behaves as expected.
+	curl http://localhost:9999
+	curl http://localhost:9999/health

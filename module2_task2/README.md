@@ -1,37 +1,17 @@
-# Awesome Inc
-
+# Go-Hugo
 ## Prerequisites
 
-### Concepts
-
-You should have a basic knowledge on the following concepts:
-
-    What a compiled language is (C/C#/Golang/Rust/etc.)
-        Generation process from source to executable binary
-        Basic types: string, integer, boolean, maps, arrays
-        Basic algorithmic: loops, conditional, functions
-
-    Installing command line tools with NPM (in addition to package managers)
-
-    Understand the basics of the HTTP protocol (client/server, verbs, headers)
-
-### Tooling
-
-This project needs the following tools / services:
-
-- Same tools as previous module
-- Golang in v1.15.*
-- NPM v7+ with NodeJS v14.* (stable)
-- Python 3 with pip module
+- Install Hugo (the extended edition)
+- Install Git
+- install go
 
 ## Lifecycle
-
-- build
-- post
-- clean
-- stop
-- lint
-- run
-- help
-- test
-- unit-tests
+- lint: reads the source code. Must always be called before the goal build, to avoid compiling the code if the linter fails.
+- build: Generate the website from the markdown and configuration files in the directory dist/. and compile the source code of the application to a binary named awesome-api.
+- run: Run the application in background by executing the binary awesome-api, and write logs into a file named awesome.log.
+- stop: Stop the application.
+- clean: Cleanup the content of the directory dist and delete the binary awesome-api and the log file awesome-api.log.
+- test: test to ensure application behaves as expected.
+- post: Create a new blog post whose filename and title come from the environment variables POST_TITLE and POST_NAME.
+- help: prints out the list of commands in makefile and their usage.
+- unit-tests: The goal unit-tests should be implemented and should execute (successfully) the Golang unit tests.
