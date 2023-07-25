@@ -1,33 +1,43 @@
-build: ## Compile the source code of the application to a binary name file using tje command go build
-	hugo
-	make lint
-	go build 
+# Variables
+BINARY_NAME := awesome-api
+LOG_FILE := $(BINARY_NAME).log
+PID_FILE := $(BINARY_NAME).pid
 
-post: ## Creates a new post using env vars POST_TITLE and POST_NAME
-	hugo new posts/$(POST_NAME).md
-	sed -i 's/title: .*/title: "$(POST_TITLE)"/' content/posts/$(POST_NAME).md
+# Goals
+.PHONY: help
 
-clean: ##  Delete the binary awesome-api and the log file awesome-api.log
-	pkill awesome-api
-	rm -rf ./dist/*
-	rm ./awesome-api ./awesome.log
+help: ## Prints out the list of targets and their usage
+	@awk 'BEGIN {FS = ":.*?# "} /^[a-zA-Z_-]+:.*?# / {printf "\033[36m%-10s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-.SILENT:
-help: ## Displays helpful information for Makefile commands
-	cat Makefile | grep '##' | tr -d '##'
- 
-run: ## Run the application in background by executing the binary awesome-api, and write logs
-	./awesome-api >./awesome.log 2>&1 &
 
-stop: ## Stop the application with the command kill
-	pkill awesome-api
+.PHONY: build
+build: lint ## alsdjflksajdf a;ljsdflsadhf hf hdsa;lahdsf sdf;lkahds fhdsaf
+	go get github.com/gorilla/mux
+	go build -o $(BINARY_NAME)
 
-test: ## You want to test it to ensure that it behaves as expected.
-	curl http://localhost:9999
-	curl http://localhost:9999/health
+.PHONY: run 
+run: ## dslfjsaldjflkdsajfsajf;ljsadjf;lsajdfkldsaf sadfasdfasdfdsa
+	./$(BINARY_NAME) > $(LOG_FILE) 2>&1 & echo $$! > $(PID_FILE)
 
-lint: ## the linter reads the source code and detect common semantic errors.
-	golangci-lint run ./main.go
+.PHONY: stop
+stop: ## dsakjhfalsd hf;lsa fjdsahf;sahfhsadlkfhsadfsafd 
+	-kill `cat $(PID_FILE)` || true
+	-rm $(PID_FILE) || true
 
-unit-tests: ##execute (successfully) the Golang unit tests
-	go test -v -short -coverprofile=coverage-units.out
+
+.PHONY: clean 
+clean: ## sa;lkdjf dsasadlkjfsad f;lj hdsaflja'skjd flkas
+	make stop
+	-rm $(BINARY_NAME) || true
+	-rm $(LOG_FILE) || true
+
+.PHONY: test
+test: ## WOOOHOOOOOOOO saljdfasldhfaksdf asdsafgasgasfasdf
+	@echo "Testing HTTP endpoint /..."
+	@curl -sSf http://localhost:9999 || echo "TESTFAILED"
+	@echo "Testing HTTP endpoint /health..."
+	@curl -sSf http://localhost:9999/health || echo "TESTFAILED"
+
+.PHONY: lint
+lint: ## LINT LINT LINT YEAHHHH BABYYYY
+	golangci-lint run
