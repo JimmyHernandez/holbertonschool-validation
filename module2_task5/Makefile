@@ -28,6 +28,19 @@ post:  ## Create a new post with global variables where file name is POST_NAME a
 	@hugo new posts/$(POST_NAME).md
 	@sed -i 's/^title: .*/title: "'"${POST_TITLE}"'"/' content/posts/"${POST_NAME}".md
 
+
+test: ## Check expected behaviour of the app
+	@make unit-tests
+	@make integration-tests
+	@make validate
+
+unit-tests: ## execute (successfully) the Golang unit tests
+	@go test -v -short -coverprofile=coverage-units.out    
+
+integration-tests:   ## Run integration tests on web server
+	@go test -v -coverprofile=coverage-integrations.out
+
+
 check:  ## check content and links  of URLs
 	@markdownlint content/posts/*.md
 	@find content/**/*.md -exec markdown-link-check {} \;
