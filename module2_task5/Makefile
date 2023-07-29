@@ -1,4 +1,6 @@
-build:  go-build hugo-build ##Build your ebsite and API
+build: ##Build your ebsite and API
+	go-build 
+	hugo-build 
 
 clean: ## Cleanup the content of the directory dist/, the binary awesome-api and the log file awesome-api.log
 	-@make stop
