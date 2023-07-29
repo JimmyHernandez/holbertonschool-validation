@@ -1,34 +1,57 @@
-# Define variables
-API_BINARY = awesome-api
-HUGO_BINARY = hugo
+# Implement the next steps for the actual Go-Hugo website's source code
+go-build:	## Builds the API binary file using go
+	go mod init github.com/Apinedas/awesome-api
+	go get github.com/gorilla/mux
+	go build
 
-.PHONY: build
-build: go-build hugo-build
+hugo-build: ## Builds a website using gohugo on the dist folder
+	check
+	hugo --destination ./dist
 
-.PHONY: go-build
-go-build:
-	go build -o $(API_BINARY) ./awesome-api
+build:	## Builds all that is needed for website
+	make go-build
+	make hugo-build
 
-.PHONY: hugo-build
-hugo-build:
-	$(HUGO_BINARY)
+post: ## Creates a new post using env vars POST_TITLE and POST_NAME
+	hugo new posts/$(POST_NAME).md
+	sed -i 's/title: .*/title: "$(POST_TITLE)"/' content/posts/$(POST_NAME).md
 
-.PHONY: run
-run: build
-	./$(API_BINARY) &
+clean: ##  Delete the binary awesome-api and the log file awesome-api.log
+	-make stop
+	-rm ./awesome-api awesome.log coverage* go* ./dist
 
-.PHONY: stop
-stop:
-	killall $(API_BINARY)
+.SILENT:
+help: ## Displays helpful information for Makefile commands
+	echo "Usage: make <command>"
+	echo "-----"	
+	cat Makefile | grep '##' | tr -d '##'
+ 
+run: ## Run the application in background by executing the binary awesome-api, and write logs
+	./awesome-api >./awesome.log 2>&1 &
 
-.PHONY: help
-help:
-	@echo "Available targets:"
-	@echo "  build     : Build both the static website and the API application"
-	@echo "  run       : Start the service in the background"
-	@echo "  stop      : Stop the service started by 'make run'"
-	@echo "  help      : List all targets with their help message"
-	@echo "  lint      : Execute all lint steps"
-	@echo "  post      : Add a new post"
-	@echo "  test      : Execute all testing targets (unit-tests, integration-tests, and validate)"
-	@echo "  clean     : Delete all generated files (logs, test reports, distribution directory, etc.) and call 'make stop' target as preliminary"
+stop: ## Stop the application with the command kill
+	pkill awesome-api
+
+test: ## You want to test it to ensure that it behaves as expected.
+	-make build
+	make unit-tests
+	make integration-tests
+
+lint: ## the linter reads the source code and detect common semantic errors.
+	golangci-lint run ./main.go
+
+unit-tests: ##execute (successfully) the Golang unit tests
+	go test -v -short -coverprofile=coverage-units.out
+
+integration-tests: ##  execute (successfully) the Golang integration tests
+	go test -v -coverprofile=coverage-integrations.out
+
+check:  ## Lints and check for dead links on markdowns using markdownlint-cli and markdown-link-check
+	markdownlint ./content/posts/*.md
+	markdown-link-check ./content/posts/*.md
+
+validate: ## Validates dist/index.html using W3C Hbtn validator
+	make build
+	-git clone https://github.com/holbertonschool/W3C-Validator.git
+	-./W3C-Validator/w3c_validator.py ./dist/index.html
+	-rm -rf ./W3C-Validator
