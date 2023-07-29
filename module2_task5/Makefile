@@ -1,8 +1,4 @@
-build: ## Generate the website from the markdown and configuration files in the directory dist/ and compile the source code of the application to a binary named awesome-api
-	@make check
-	@make lint
-	@go build
-	@hugo
+build:  go-build hugo-build ##Build your ebsite and API
 
 clean: ## Cleanup the content of the directory dist/, the binary awesome-api and the log file awesome-api.log
 	-@make stop
@@ -19,6 +15,12 @@ run: ## Run the application in background by executing the binary awesome-api, a
 
 stop: ## Stop the application with the command kill XXXXX where XXXXX is the Process ID of the application. 
 	@kill "$(shell pgrep awesome-api)"
+
+hugo-build: ## build website
+	@hugo
+
+go-build:   ## Compile the source code of the application to a binary
+	@go build
 
 test: ## Check expected behaviour of the app
 	@make unit-tests
