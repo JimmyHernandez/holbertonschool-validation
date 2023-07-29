@@ -1,4 +1,14 @@
-build:  go-build hugo-build ##Build your ebsite and API
+SHELL = /bin/bash
+POST_TITLE ?= default-title
+POST_NAME ?= default-name
+
+.PHONY: build clean post help go-build hugo-build lint run stop test unit-tests integration-tests check validate
+
+build: ## Generate the website from the markdown and configuration files in the directory dist/ and compile the source code of the application to a binary named awesome-api
+	@make check
+	@make lint
+	@go build
+	@hugo
 
 clean: ## Cleanup the content of the directory dist/, the binary awesome-api and the log file awesome-api.log
 	-@make stop
