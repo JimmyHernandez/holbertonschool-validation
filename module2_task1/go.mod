@@ -1,5 +1,3 @@
-module github.com/GabrielPaganMateo/awesome-api
+module github.com/JimmyHernandez/awesome-api
 
-go 1.20
-
-require github.com/gorilla/mux v1.8.0
+go 1.18
