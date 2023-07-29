@@ -4,15 +4,13 @@ POST_NAME ?= default-name
 
 .PHONY: build clean post help go-build hugo-build lint run stop test unit-tests integration-tests check validate
 
-build:  ##Build your ebsite and API
-	go-build hugo-build 
+build:  go-build hugo-build ##Build your ebsite and API
 
 lint:   ## Catch errors without the need to compile or execute the application
 	@golangci-lint run
 
-run:  ## Run the application in background by executing the binary
-	  build 
-	  @./awesome-api > ./awesome-api.log 2>&1 &
+run:    build ## Run the application in background by executing the binary
+	@./awesome-api >./awesome-api.log 2>&1 &
 
 stop:   ## Stop the application
 	@pkill awesome-api || true
@@ -30,8 +28,7 @@ post:  ## Create a new post with global variables where file name is POST_NAME a
 	@hugo new posts/$(POST_NAME).md
 	@sed -i 's/^title: .*/title: "'"${POST_TITLE}"'"/' content/posts/"${POST_NAME}".md
 
-test:   ## Run both unit and integration tests
-unit-tests integration-tests validate 
+test:   unit-tests integration-tests validate ## Run both unit and integration tests
 
 unit-tests:   ## Run unit tests on web server
 	@go test -v -short -coverprofile=coverage-units.out
