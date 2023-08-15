@@ -18,3 +18,11 @@
 - integration-tests: should be implemented and should execute (successfully) the Golang integration tests.
 - check: Lints and check for dead links on markdowns using markdownlint-cli and markdown-link-check.
 - validate: Validates dist/index.html using W3C Hbtn validator 
+
+## Workflow
+
+* Triggered on:
+* Code push
+* Once a day
+* Does stuff
+
