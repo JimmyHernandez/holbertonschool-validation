@@ -8,7 +8,7 @@ on:
     - cron: '0 0 * * *' # Schedule to run daily at midnight UTC
 
 jobs:
-  validate:
+  validate:https://students-support.hbtn.io/hc
     runs-on: ubuntu-22.04
 
     steps:
