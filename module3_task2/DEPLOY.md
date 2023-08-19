@@ -1,5 +1,6 @@
 # Deployment Document
-
+zip
+tag
 - What is in the archive and how to unarchive it?
 
 - It is a compressed file that is the awesome-api binary and is 'dist directory'.
