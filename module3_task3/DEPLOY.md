@@ -1,4 +1,6 @@
 # Deployment Document
+* .zip format
+* Creating tag triggers release
 
 - What is in the archive and how to unarchive it?
 
