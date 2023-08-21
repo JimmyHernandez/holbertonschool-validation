@@ -28,7 +28,7 @@ jobs:
       # write permission is required for autolabeler
       # otherwise, read permission is required at least
       pull-requests: write
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
       # (Optional) GitHub Enterprise requires GHE_HOST variable set
       # name: Set GHE_HOST
@@ -42,7 +42,7 @@ jobs:
         # release-drafter.yml
         with:
           publish: true
-          config-name: release_drafter.yml
+          config-name: release-drafter.yml
         # disable-autolabeler: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
