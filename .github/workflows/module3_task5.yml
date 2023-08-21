@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup Hugo
         run: |
-          cd module3_task5/
+          cd ./module3_task5/
           sudo ./setup.sh
       - name: lint
         run: |
